@@ -1,4 +1,4 @@
-.login_root {
+.login__root {
 	font-family: serif;
 	color: dimgray;
 	min-height: 80vh;
@@ -9,6 +9,6 @@
 	padding: 50px;
 }
 
-.login_root span {
+.login__root span {
 	cursor: pointer;
 }

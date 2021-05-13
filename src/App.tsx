@@ -1,8 +1,8 @@
 import React, { FC, useEffect, useState } from 'react';
 import styles from './App.module.css';
-import { db } from './firebase'
+import { auth, db } from './firebase'
 import { FormControl, List, makeStyles, TextField } from '@material-ui/core'
-import { AddToPhotos } from '@material-ui/icons'
+import { AddToPhotos, ExitToApp } from '@material-ui/icons'
 import TaskItem from './TaskItem';
 
 const useStyles = makeStyles({
@@ -16,7 +16,7 @@ const useStyles = makeStyles({
   },
 });
 
-const App: FC = () => {
+const App: FC = (props: any) => {
   const [tasks, setTasks] = useState([{ id: '', title: '' }])
   const [input, setInput] = useState('')
   const classes = useStyles()
@@ -37,9 +37,29 @@ const App: FC = () => {
     setInput('')
   }
 
+  useEffect(() => {
+    const unSub = auth.onAuthStateChanged((user) => {
+      !user && props.history.push("login")
+    })
+    return () => unSub();
+  })
+
   return (
     <div className={styles.app__root}>
       <h1>Todo App by React/Firebase</h1>
+      <button
+        className={styles.app__logout}
+        onClick={async () => {
+          try {
+            await auth.signOut();
+            props.history.push('login')
+          } catch (error) {
+            alert(error.message)
+          }
+        }}
+      >
+        <ExitToApp />
+      </button>
       <br />
       <FormControl>
         <TextField
